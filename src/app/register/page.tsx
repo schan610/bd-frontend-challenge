@@ -1,5 +1,5 @@
 "use client"
-import { Fragment, useState } from "react";
+import { FormEvent, Fragment, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,7 +9,7 @@ import PreferencesForm from "./_components/PreferencesForm";
 
 const steps = [
   {id: "1", title: "Account", requiredFields: ["username", "email", "password"]},
-  {id: "2", title: "Address", requiredFields: ["address", "country", "city", "zipcode"]},
+  {id: "2", title: "Address", requiredFields: ["address1", "country", "city", "zipcode", "phoneNumber"]},
   {id: "3", title: "Preferences"},
 ]
 
@@ -27,8 +27,8 @@ type FormData = {
   zipCode: string,
   company: string,
   phoneNumber: string,
-  wantsNotifications: boolean,
-  shareInformation: boolean,
+  wantsNotifications: string,
+  shareInformation: string,
   notificationPreferences: string,
 }
 const DEFAULT_DATA = {
@@ -45,14 +45,14 @@ const DEFAULT_DATA = {
   zipCode: "",
   company: "",
   phoneNumber: "",
-  wantsNotifications: false,
-  shareInformation: false,
+  wantsNotifications: "",
+  shareInformation: "",
   notificationPreferences: "",
 }
 
 const RegisterPage = () => {
   const [curStep, setCurStep] = useState(0);
-  const [data, setData] = useState(DEFAULT_DATA);
+  const [data, setData] = useState<FormData>(DEFAULT_DATA);
 
   const updateFields = (fields: Partial<FormData>) => {
     setData(prev => {
@@ -60,20 +60,51 @@ const RegisterPage = () => {
     })
   };
 
-  // const validateRequiredFields = () => {
-  //   // Check if required fields have been button on next click
-  // };
+  const validateRequiredFields = () => {
+    // Check if required fields have been button on next click
+    if(steps[curStep].requiredFields) {
+      const validate = steps[curStep].requiredFields?.every((item) => {
+        if(data[item as keyof FormData] === "" || undefined) return false;
+        else return true;
+      });
+      return validate
+    } 
+    return true;
+  };
 
   const handleNextBtn = () => {
-    if(curStep === steps.length-1) return;
-    //TODO: Check if required fields are filled
-    setCurStep(prevState => prevState+1);
 
-  };
+    if(curStep === steps.length-1) return;
+
+    const validate = validateRequiredFields();
+    if(validate) {
+      setCurStep(prevState => prevState+1);
+    }  else return
+   };
   const handleBackBtn = () => {
     if(curStep === 0) return;
     setCurStep(prevState => prevState-1);
   };
+
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(data.wantsNotifications);
+    const formData = new FormData(event.currentTarget);
+    for (const [key, value] of Object.entries(data)) {
+      formData.set(key, value.toString());
+    }
+
+
+    formData.append('set',data.email);
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      body: formData,
+    })
+    console.log(response);
+  };
+
+
   return <div className="w-screen h-screen flex flex-col justify-center items-center max-w-2xl mx-auto">
     <section className="section-container">
       <div className="step-header">
@@ -88,15 +119,16 @@ const RegisterPage = () => {
             </Fragment>
           } )}
         </div>
-        <form className="form-container">
+        <form className="form-container" onSubmit={handleSubmit}>
           {curStep === 0 && <AccountForm {...data} updateFields={updateFields}/>}
             {curStep === 1 && <AddressForm {...data} updateFields={updateFields}/>}
             {curStep === 2 && <PreferencesForm {...data} updateFields={updateFields}/>}
-        </form>
-      </div>
-      <div className="controls">
-         {curStep !== 0 && <button className="controls__btn--secondary" onClick={handleBackBtn}><FontAwesomeIcon icon={faArrowLeft} /> Back</button>}
-          <button className="controls__btn--primary" onClick={handleNextBtn}>Next Step <FontAwesomeIcon icon={faArrowRight} /></button>
+        <div className="controls">
+          {curStep !== 0 && <button type="button" className="controls__btn--secondary" onClick={handleBackBtn}><FontAwesomeIcon icon={faArrowLeft} /> Back</button>}
+            {curStep !== steps.length-1 && <button type="button" className="controls__btn--primary" onClick={handleNextBtn}>Next Step <FontAwesomeIcon icon={faArrowRight} /></button>}
+            {curStep === 2 && <button type="submit" className="controls__btn--primary">Register <FontAwesomeIcon icon={faArrowRight} /></button>}
+        </div>
+      </form>
       </div>
   </section>
   </div>

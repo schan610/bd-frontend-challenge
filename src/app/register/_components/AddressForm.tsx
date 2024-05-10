@@ -37,8 +37,9 @@ const AddressForm = ({address1, address2, country, city, zipCode, company, phone
        <div className="form-control">
            <label htmlFor="country">Country *</label>
            <div className="dropdown-container">
-            <select id="country" name="country" required value={country} onChange={e => updateFields({country: e.target.value})}>
-                <option value="USA">USA</option>
+            <select   id="country" name="country" required value={country !== "" ? country : "none"}  onChange={e => updateFields({country: e.target.value})}>
+                <option value="none" disabled hidden></option> 
+                <option value="US">US</option>
                 <option value="Canada">Canada</option>
                 <option value="Italy">Italy</option>
                 <option value="Austrailia">Austrailia</option>
@@ -68,9 +69,9 @@ const AddressForm = ({address1, address2, country, city, zipCode, company, phone
             </div>
         </div>
         <div className="form-control">
-           <label htmlFor="phone">Phone Number</label>
+           <label htmlFor="phone">Phone Number *</label>
            <div className="input-container">
-            <input type="text" pattern="[0-9]{5}" id="phone" name="phone" placeholder="Phone Number" value={phoneNumber} onChange={e => updateFields({phoneNumber: e.target.value})}/>
+            <input type="text" pattern="[0-9]{5}" id="phone" name="phone" placeholder="Phone Number" value={phoneNumber} onChange={e => updateFields({phoneNumber: e.target.value})} required/>
              <FontAwesomeIcon icon={faPhone} className="input__icon"/>
             </div>
         </div>
