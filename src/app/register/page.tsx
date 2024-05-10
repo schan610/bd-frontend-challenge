@@ -59,9 +59,25 @@ const RegisterPage = () => {
       return {...prev, ...fields}
     })
   };
+
+  const validateRequiredFields = () => {
+
+    const validated = steps[curStep].requiredFields?.some((item) => 
+       data[item] !== ""
+  ) 
+    console.log(validated);
+    return validated;
+  };
   const handleNextBtn = () => {
     if(curStep === steps.length-1) return;
-    setCurStep(prevState => prevState+1);
+    // check if required fields have been filled
+    const validated = validateRequiredFields();
+    // console.log(validated);
+    // if(validated) {
+    //   setCurStep(prevState => prevState+1);
+    // }
+    // else return;
+
   };
   const handleBackBtn = () => {
     if(curStep === 0) return;

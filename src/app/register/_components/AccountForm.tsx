@@ -57,7 +57,7 @@ const AccountForm = ({firstName, lastName, email, username, password, confirmPas
         <div className="form-control">
            <label htmlFor="password">Confirm Password *</label>
            <div className="input-container">
-            <input  type="password" id="password" name="password" placeholder="Password" required value={confirmPassword} onChange={e => updateFields({confirmPassword: e.target.value})}/>
+            <input  type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Passwword" required value={confirmPassword} onChange={e => updateFields({confirmPassword: e.target.value})}/>
              <FontAwesomeIcon icon={faFingerprint} className="input__icon"/>
             </div>
         </div>
