@@ -12,7 +12,7 @@ const PreferencesForm = ({wantsNotifications, shareInformation, notificationPref
 
 const handleCheck = (type: string) => {
   if(type === "wantsNotifications") {
-    if(wantsNotifications === "No") {
+    if(!wantsNotifications || wantsNotifications === "No" ) {
       updateFields({wantsNotifications: "Yes"})
     } else {
       updateFields({wantsNotifications: "No"})
@@ -20,7 +20,7 @@ const handleCheck = (type: string) => {
   }
 
   if(type === "shareInformation") {
-    if(shareInformation === "No") {
+    if(!shareInformation || shareInformation === "No") {
       updateFields({shareInformation: "Yes"})
     } else {
       updateFields({shareInformation: "No"})
@@ -46,7 +46,6 @@ return <>
           <option value="none" disabled hidden></option> 
           <option value="Email">Email</option>
           <option value="Text">Text</option>
-          <option value="None">None</option>
         </select>
   </div>
 </div>

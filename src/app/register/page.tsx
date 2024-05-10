@@ -6,6 +6,7 @@ import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import AccountForm from "./_components/AccountForm";
 import AddressForm from "./_components/AddressForm";
 import PreferencesForm from "./_components/PreferencesForm";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {id: "1", title: "Account", requiredFields: ["username", "email", "password"]},
@@ -52,10 +53,12 @@ const DEFAULT_DATA = {
 
 const RegisterPage = () => {
   const [curStep, setCurStep] = useState(0);
-  const [data, setData] = useState<FormData>(DEFAULT_DATA);
+  const [formInput, setFormInput] = useState<FormData>(DEFAULT_DATA);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const updateFields = (fields: Partial<FormData>) => {
-    setData(prev => {
+    setFormInput(prev => {
       return {...prev, ...fields}
     })
   };
@@ -64,7 +67,7 @@ const RegisterPage = () => {
     // Check if required fields have been button on next click
     if(steps[curStep].requiredFields) {
       const validate = steps[curStep].requiredFields?.every((item) => {
-        if(data[item as keyof FormData] === "" || undefined) return false;
+        if(formInput[item as keyof FormData] === "" || undefined) return false;
         else return true;
       });
       return validate
@@ -89,19 +92,25 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(data.wantsNotifications);
+    setError(null)
+    console.log(formInput.wantsNotifications);
     const formData = new FormData(event.currentTarget);
-    for (const [key, value] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(formInput)) {
       formData.set(key, value.toString());
     }
 
-
-    formData.append('set',data.email);
     const response = await fetch('/api/register', {
       method: 'POST',
       body: formData,
-    })
-    console.log(response);
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert(data.data.message);
+      router.push('/')
+    } else {
+      setError("Please fill in correct input")
+    }
   };
 
 
@@ -120,14 +129,15 @@ const RegisterPage = () => {
           } )}
         </div>
         <form className="form-container" onSubmit={handleSubmit}>
-          {curStep === 0 && <AccountForm {...data} updateFields={updateFields}/>}
-            {curStep === 1 && <AddressForm {...data} updateFields={updateFields}/>}
-            {curStep === 2 && <PreferencesForm {...data} updateFields={updateFields}/>}
+          {curStep === 0 && <AccountForm {...formInput} updateFields={updateFields}/>}
+            {curStep === 1 && <AddressForm {...formInput} updateFields={updateFields}/>}
+            {curStep === 2 && <PreferencesForm {...formInput} updateFields={updateFields}/>}
         <div className="controls">
           {curStep !== 0 && <button type="button" className="controls__btn--secondary" onClick={handleBackBtn}><FontAwesomeIcon icon={faArrowLeft} /> Back</button>}
             {curStep !== steps.length-1 && <button type="button" className="controls__btn--primary" onClick={handleNextBtn}>Next Step <FontAwesomeIcon icon={faArrowRight} /></button>}
             {curStep === 2 && <button type="submit" className="controls__btn--primary">Register <FontAwesomeIcon icon={faArrowRight} /></button>}
         </div>
+        {error && <div className="text-red-700 text-center">{error}</div>}
       </form>
       </div>
   </section>
