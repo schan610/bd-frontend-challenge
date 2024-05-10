@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --background-color: #f2f2f2;
+  --primary-color: #ffc107;
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  min-width: 28.13rem;
+  width: 100%;
+  height: min-content;
+  background-color: var(--background-color);
+  color: #343a40;
+  flex-direction: column;
+}
+
+.step-header {
+  margin: 0 auto;
+  padding: 10px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #343a40;
+}
+
+.content-container {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  gap: 10px;
+  padding: 10px;
+}
+
+.form-indicator {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.form-indicator__item {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  border: 2px solid #343a40;
+  font-size: 24px;
+  font-weight: 600;
+}
+.form-indicator__item--active {
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.form-indicator__separator {
+  height: 2px;
+  flex-grow: 1;
+  background-color: #343a40;
+}

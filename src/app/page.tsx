@@ -3,6 +3,7 @@
 import { faFontAwesome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [name, setName] = useState("World");
@@ -35,6 +36,10 @@ export default function Home() {
           onChange={({ target }) => setName(target.value)}
         />
       </form>
+      <div className="flex gap-16">
+        <Link href={"/register"} className= " border-2 border-white-500 text-white font-bold py-2 px-4 rounded">Register</Link>
+        <Link href={"/"} className= " border-2 border-white-500 text-white font-bold py-2 px-4 rounded">Log In</Link>
+      </div>
     </main>
   );
 }
