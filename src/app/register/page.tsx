@@ -8,13 +8,57 @@ import AddressForm from "./_components/AddressForm";
 import PreferencesForm from "./_components/PreferencesForm";
 
 const steps = [
-  {id: "1", title: "Account"},
-  {id: "2", title: "Address"},
+  {id: "1", title: "Account", requiredFields: ["username", "email", "password"]},
+  {id: "2", title: "Address", requiredFields: ["address", "country", "city", "zipcode"]},
   {id: "3", title: "Preferences"},
 ]
 
+type FormData = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  username: string,
+  password: string,
+  confirmPassword: string,
+  address1: string,
+  address2: string,
+  country: string,
+  city: string,
+  zipCode: string,
+  company: string,
+  phoneNumber: string,
+  wantsNotifications: boolean,
+  shareInformation: boolean,
+  notificationPreferences: string,
+}
+const DEFAULT_DATA = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  username: "",
+  password: "",
+  confirmPassword: "",
+  address1: "",
+  address2: "",
+  country: "",
+  city: "",
+  zipCode: "",
+  company: "",
+  phoneNumber: "",
+  wantsNotifications: false,
+  shareInformation: false,
+  notificationPreferences: "",
+}
+
 const RegisterPage = () => {
-  const [curStep, setCurStep] = useState(0)
+  const [curStep, setCurStep] = useState(0);
+  const [data, setData] = useState(DEFAULT_DATA);
+
+  const updateFields = (fields: Partial<FormData>) => {
+    setData(prev => {
+      return {...prev, ...fields}
+    })
+  };
   const handleNextBtn = () => {
     if(curStep === steps.length-1) return;
     setCurStep(prevState => prevState+1);
@@ -38,13 +82,13 @@ const RegisterPage = () => {
           } )}
         </div>
         <form className="form-container">
-            {curStep === 0 && <AccountForm/>}
-            {curStep === 1 && <AddressForm/>}
-            {curStep === 2 && <PreferencesForm/>}
+          {curStep === 0 && <AccountForm {...data} updateFields={updateFields}/>}
+            {curStep === 1 && <AddressForm {...data} updateFields={updateFields}/>}
+            {curStep === 2 && <PreferencesForm {...data} updateFields={updateFields}/>}
         </form>
       </div>
       <div className="controls">
-          <button className="controls__btn--secondary" onClick={handleBackBtn}><FontAwesomeIcon icon={faArrowLeft} /> Back</button>
+         {curStep !== 0 && <button className="controls__btn--secondary" onClick={handleBackBtn}><FontAwesomeIcon icon={faArrowLeft} /> Back</button>}
           <button className="controls__btn--primary" onClick={handleNextBtn}>Next Step <FontAwesomeIcon icon={faArrowRight} /></button>
       </div>
   </section>
