@@ -100,3 +100,54 @@
   border: 1px solid #6c757d;
   color: #6c757d;
 }
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 5px;
+  width: 100%;
+  & label {
+    font-size: 10px;
+  }
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  & input {
+    width: 100%;
+    padding: 10px;
+    background-color: #e0e0e0;
+    padding-left: 38px;
+  }
+}
+
+.input__icon {
+  font-size: 16px;
+  position: absolute;
+  padding: 10px;
+  top: 50%;
+  left: 0px;
+  transform: translateY(-50%);
+  color: #193154;
+}
+
+.checkbox-control {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.dropdown-container {
+  width: 100%;
+  & select {
+    cursor: pointer;
+    width: 100%;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-right: 10px solid transparent;
+  }
+}
